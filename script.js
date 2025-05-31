@@ -89,8 +89,7 @@ const elementsData = {
     },
     "สายฟ้า": {
         description: "ฉับไว ปราดเปรียว มีไหวพริบดี มีความคิดสร้างสรรค์ และแก้ปัญหาเฉพาะหน้าได้ดีดุจสายฟ้าฟาดในพริบตา",
-        skills: ["พันธมิตร// ส่วนที่ 1 ของ script.js อยู่ด้านบน
-            "อัสนีบาต", "ดาบสายฟ้าฟาด", "อัสนีบาตพันชั้น"],
+        skills: ["พันธมิตรอัสนีบาต", "ดาบสายฟ้าฟาด", "อัสนีบาตพันชั้น"],
         subElementHint: "อาจมีอิทธิพลของ โลหะ แฝงอยู่ ทำให้มีความแม่นยำและพลังที่พุ่งตรง"
     },
     "แสง": {
@@ -112,7 +111,7 @@ let scores = {
 };
 let selectedOption = null; // เก็บตัวเลือกที่ผู้เล่นเลือกในแต่ละคำถาม
 
-// Elements จาก HTML
+// Elements จาก HTML (ตรวจสอบ ID เหล่านี้ให้ตรงกับใน index.html)
 const storyIntroSection = document.getElementById('story-intro');
 const startQuizBtn = document.getElementById('start-quiz-btn');
 const quizSection = document.getElementById('quiz-section');
@@ -197,32 +196,55 @@ function showResult() {
 
     let maxScore = -1;
     let resultElement = "";
+    let tiedElements = []; // ใช้เก็บธาตุที่มีคะแนนสูงสุดเท่ากัน
 
     // หาธาตุที่มีคะแนนสูงสุด
     for (const element in scores) {
         if (scores[element] > maxScore) {
             maxScore = scores[element];
             resultElement = element;
-        } else if (scores[element] === maxScore) {
-            // กรณีมีคะแนนเท่ากัน อาจจะสุ่ม หรือแสดงเป็นธาตุผสม
-            // สำหรับตอนนี้ ให้เป็นธาตุแรกที่เจอที่มีคะแนนสูงสุด
-            // คุณสามารถปรับแต่ง logic ตรงนี้ได้ เช่น "ธาตุดิน-แสง"
+            tiedElements = [element]; // เริ่มต้นใหม่ถ้าเจอคะแนนสูงกว่า
+        } else if (scores[element] === maxScore && maxScore > 0) { // ถ้าคะแนนเท่ากันและไม่ใช่ 0
+            tiedElements.push(element);
         }
     }
 
+    // กรณีมีธาตุเดียวที่ได้คะแนนสูงสุด
+    if (tiedElements.length === 1) {
+        resultElement = tiedElements[0];
+    } else if (tiedElements.length > 1) {
+        // กรณีมีหลายธาตุที่ได้คะแนนสูงสุดเท่ากัน
+        // อาจจะเลือกธาตุแรก หรือสุ่ม หรือแสดงทั้งหมด
+        // สำหรับตอนนี้ เลือกธาตุแรกใน tiedElements (หรือจะปรับแต่งให้สุ่มได้)
+        resultElement = tiedElements[0];
+        // หรือจะแสดงเป็น "ธาตุผสม" ก็ได้ เช่น "ธาตุดิน-แสง"
+        // resultElement = "ธาตุผสม: " + tiedElements.join("-");
+    } else {
+        // กรณีไม่มีคะแนนเลย (ไม่น่าจะเกิดขึ้นถ้าเล่นจนจบ)
+        resultElement = "ไม่พบธาตุที่ชัดเจน";
+    }
+
     resultElementSpan.textContent = resultElement;
-    const data = elementsData[resultElement];
-    elementDescriptionPara.textContent = data.description;
-
-    elementSkillsList.innerHTML = '';
-    data.skills.forEach(skill => {
-        const li = document.createElement('li');
-        li.textContent = skill;
-        elementSkillsList.appendChild(li);
-    });
-
-    subElementHintPara.textContent = data.subElementHint;
+    const data = elementsData[resultElement]; // ใช้ข้อมูลธาตุที่ได้
+    
+    // ตรวจสอบว่ามีข้อมูลธาตุหรือไม่ก่อนเข้าถึง property
+    if (data) {
+        elementDescriptionPara.textContent = data.description;
+        elementSkillsList.innerHTML = '';
+        data.skills.forEach(skill => {
+            const li = document.createElement('li');
+            li.textContent = skill;
+            elementSkillsList.appendChild(li);
+        });
+        subElementHintPara.textContent = data.subElementHint;
+    } else {
+        // กรณีที่ไม่พบข้อมูลธาตุที่ตรงกัน (เช่นกรณี "ธาตุผสม" ที่ยังไม่ได้กำหนดใน elementsData)
+        elementDescriptionPara.textContent = "ไม่สามารถระบุรายละเอียดธาตุได้ เนื่องจากเป็นธาตุผสม หรือข้อมูลยังไม่สมบูรณ์";
+        elementSkillsList.innerHTML = '';
+        subElementHintPara.textContent = "";
+    }
 }
+
 
 // รีเซ็ตคะแนน
 function resetScores() {
@@ -238,9 +260,32 @@ function restartQuiz() {
     currentQuestionIndex = 0;
     resetScores();
     selectedOption = null;
+    // เลื่อนหน้าจอกลับขึ้นไปด้านบนสุด
+    window.scrollTo(0, 0); 
 }
 
 // --- Event Listeners ---
-startQuizBtn.addEventListener('click', startQuiz);
-nextQuestionBtn.addEventListener('click', goToNextQuestion);
-restartQuizBtn.addEventListener('click', restartQuiz);
+// ตรวจสอบให้แน่ใจว่าได้ดึง element ได้ถูกต้อง
+if (startQuizBtn) {
+    startQuizBtn.addEventListener('click', startQuiz);
+} else {
+    console.error("Element with ID 'start-quiz-btn' not found.");
+}
+
+if (nextQuestionBtn) {
+    nextQuestionBtn.addEventListener('click', goToNextQuestion);
+} else {
+    console.error("Element with ID 'next-question-btn' not found.");
+}
+
+if (restartQuizBtn) {
+    restartQuizBtn.addEventListener('click', restartQuiz);
+} else {
+    console.error("Element with ID 'restart-quiz-btn' not found.");
+}
+
+// เมื่อหน้าเว็บโหลดเสร็จสิ้น จะซ่อนส่วน Quiz และ Result ไว้ก่อน
+document.addEventListener('DOMContentLoaded', () => {
+    quizSection.classList.add('hidden');
+    resultSection.classList.add('hidden');
+});
