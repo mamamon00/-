@@ -1,0 +1,120 @@
+body {
+    font-family: 'Sukhumvit Set', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* เพิ่ม font สำรอง */
+    background-color: #f0f8f0; /* สีเขียวอ่อนๆ เหมือนป่า */
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    /* แนะนำให้เปลี่ยน URL รูปภาพพื้นหลังเป็นรูปที่คุณต้องการ */
+    background-image: url('https://user-images.githubusercontent.com/109403164/281691238-d63c46e3-1e5b-4809-a1d2-094e9f733189.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.9); /* พื้นหลังโปร่งแสง */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+}
+
+h1 {
+    color: #4a7c59; /* สีเขียวเข้ม */
+    margin-bottom: 25px;
+    font-size: 2.5em;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+h2 {
+    color: #5d8f6d;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 1.8em;
+}
+
+p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.section {
+    margin-bottom: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+button {
+    background-color: #7ab88b; /* สีเขียวกลางๆ */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #5d8f6d; /* สีเขียวเข้มขึ้นเมื่อ Hover */
+    transform: translateY(-2px);
+}
+
+#options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.option-button {
+    background-color: #e6f2e6; /* สีพื้นหลังตัวเลือก */
+    color: #4a7c59;
+    border: 1px solid #7ab88b;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.option-button:hover {
+    background-color: #d9edd9;
+    border-color: #5d8f6d;
+}
+
+.option-button.selected {
+    background-color: #c2d6b3; /* สีเมื่อเลือก */
+    border-color: #4a7c59;
+    font-weight: bold;
+}
+
+#element-description {
+    font-style: italic;
+    color: #666;
+}
+
+#element-skills {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+#element-skills li {
+    background-color: #f7fff7;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    border: 1px dashed #a0d4a0;
+}
