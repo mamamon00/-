@@ -10,7 +10,7 @@ body {
     padding: 20px;
     box-sizing: border-box;
     /* แนะนำให้เปลี่ยน URL รูปภาพพื้นหลังเป็นรูปที่คุณต้องการ */
-    background-image: url('https://user-images.githubusercontent.com/109403164/281691238-d63c46e3-1e5b-4809-a1d2-094e9f733189.jpg'); 
+    background-image: url('BG1.jpg'); 
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
